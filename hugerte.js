@@ -1,5 +1,5 @@
 /**
- * HugeRTE version 1.0.1 (2024-10-04)
+ * HugeRTE version 1.0.2 (2024-10-04)
  */
 
 (function () {
@@ -31320,7 +31320,7 @@
       documentBaseURL: null,
       suffix: null,
       majorVersion: '1',
-      minorVersion: '0.1',
+      minorVersion: '0.2',
       releaseDate: '2024-10-04',
       i18n: I18n,
       activeEditor: null,

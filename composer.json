@@ -1,9 +1,9 @@
 {
 	"name": "hugerte/hugerte",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Web based JavaScript HTML WYSIWYG editor control.",
 	"license": [
-		"MIT-only"
+		"MIT"
 	],
 	"keywords": [
 		"wysiwyg",
