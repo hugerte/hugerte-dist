@@ -1,5 +1,5 @@
 /**
- * HugeRTE version 1.0.2 (2024-10-04)
+ * HugeRTE version 1.0.3 (2024-10-04)
  */
 
 (function () {
