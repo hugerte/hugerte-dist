@@ -1,5 +1,5 @@
 /**
- * HugeRTE version 1.0.4 (2024-10-28)
+ * HugeRTE version 1.0.5 (2024-12-19)
  * Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
  * Copyright (c) 2024 HugeRTE contributors
  * Licensed under the MIT license (https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT)
@@ -19311,7 +19311,7 @@
         const themesMessage = isLegacyMobileTheme ? `\n\nThemes:${ listJoiner }mobile` : '';
         const pluginsMessage = hasRemovedPlugins ? `\n\nPlugins:${ listJoiner }${ removedPlugins.join(listJoiner) }` : '';
         const optionsMessage = hasRemovedOptions ? `\n\nOptions:${ listJoiner }${ removedOptions.join(listJoiner) }` : '';
-        console.warn('The following deprecated features are currently enabled and have been removed in HugeRTE 6.0. These features will no longer work and should be removed from the HugeRTE configuration. ' + 'See https://www.tiny.cloud/docs/hugerte/6/migration-from-5x/ for more information.' + themesMessage + pluginsMessage + optionsMessage);
+        console.warn('The following deprecated features are currently enabled but have been removed in TinyMCE 6.0 and therefore, they are not present in HugeRTE either. These features will no longer work and should be removed from the HugeRTE configuration. ' + 'See https://www.hugerte.org/docs/hugerte/1/migration-from-5x/ for more information.' + themesMessage + pluginsMessage + optionsMessage);
       }
     };
     const getPluginDescription = name => find$2(deprecatedPlugins, entry => entry.name === name).fold(() => name, entry => {
@@ -31345,8 +31345,8 @@
       documentBaseURL: null,
       suffix: null,
       majorVersion: '1',
-      minorVersion: '0.4',
-      releaseDate: '2024-10-28',
+      minorVersion: '0.5',
+      releaseDate: '2024-12-19',
       i18n: I18n,
       activeEditor: null,
       focusedEditor: null,
@@ -31434,7 +31434,7 @@
         };
         const findTargets = options => {
           if (Env.browser.isIE() || Env.browser.isEdge()) {
-            initError('HugeRTE does not support the browser you are using. For a list of supported' + ' browsers please see: https://www.tiny.cloud/docs/hugerte/6/support/#supportedwebbrowsers');
+            initError('HugeRTE does not support the browser you are using. For a list of supported' + ' browsers please see: https://www.hugerte.org/docs/hugerte/1/support/#supportedwebbrowsers');
             return [];
           } else if (isQuirksMode) {
             initError('Failed to initialize the editor as the document is not in standards mode. ' + 'HugeRTE requires standards mode.');
