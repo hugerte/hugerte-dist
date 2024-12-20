@@ -1,8 +1,11 @@
 /**
- * HugeRTE version 1.0.5 (2024-12-19)
+ * HugeRTE version 1.0.6 (2024-12-20)
  * Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
  * Copyright (c) 2024 HugeRTE contributors
  * Licensed under the MIT license (https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT)
+ * This file bundles the code of DOMPurify, which is dual-licensed under the Mozilla Public License v2.0 and the Apache License, Version 2.0, meaning you can use it under either one of those licenses.
+ * Copyright 2024 Dr.-Ing. Mario Heiderich, Cure53
+ * The code of DOMPurify included in this file has been modified. The latest original code of DOMPurify can be found at https://github.com/cure53/DOMPurify.
  */
 
 (function () {
@@ -31345,8 +31348,8 @@
       documentBaseURL: null,
       suffix: null,
       majorVersion: '1',
-      minorVersion: '0.5',
-      releaseDate: '2024-12-19',
+      minorVersion: '0.6',
+      releaseDate: '2024-12-20',
       i18n: I18n,
       activeEditor: null,
       focusedEditor: null,
