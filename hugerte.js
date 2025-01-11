@@ -1,10 +1,14 @@
 /**
- * HugeRTE version 1.0.6 (2024-12-20)
+ * HugeRTE version 1.0.7 (2025-01-11)
  * Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
  * Copyright (c) 2024 HugeRTE contributors
  * Licensed under the MIT license (https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT)
+ */
+
+/**
  * This file bundles the code of DOMPurify, which is dual-licensed under the Mozilla Public License v2.0 and the Apache License, Version 2.0, meaning you can use it under either one of those licenses.
- * Copyright 2024 Dr.-Ing. Mario Heiderich, Cure53
+ * Copyright 2024 Dr.-Ing. Mario Heiderich, Cure53 and other contributors
+ * https://github.com/cure53/DOMPurify/blob/main/LICENSE
  * The code of DOMPurify included in this file has been modified. The latest original code of DOMPurify can be found at https://github.com/cure53/DOMPurify.
  */
 
@@ -19742,7 +19746,7 @@
       const contentCssFile = `content${ suffix }.css`;
       return map$3(cssLinks, url => {
         if (isBundledCssSkinName(url)) {
-          return url;
+          return toContentSkinResourceName(url);
         } else if (isContentCssSkinName(url) && !editor.inline) {
           return `${ skinUrl }/${ url }/${ contentCssFile }`;
         } else {
@@ -28780,9 +28784,9 @@
       const {
         pass: bundledCss,
         fail: normalCss
-      } = partition$2(css, name => hugerte.Resource.has(toContentSkinResourceName(name)));
+      } = partition$2(css, name => hugerte.Resource.has(name));
       const bundledPromises = bundledCss.map(url => {
-        const css = hugerte.Resource.get(toContentSkinResourceName(url));
+        const css = hugerte.Resource.get(url);
         if (isString(css)) {
           return Promise.resolve(getStyleSheetLoader$1(editor).loadRawCss(url, css));
         }
@@ -31348,8 +31352,8 @@
       documentBaseURL: null,
       suffix: null,
       majorVersion: '1',
-      minorVersion: '0.6',
-      releaseDate: '2024-12-20',
+      minorVersion: '0.7',
+      releaseDate: '2025-01-11',
       i18n: I18n,
       activeEditor: null,
       focusedEditor: null,

@@ -1,10 +1,14 @@
 /**
- * HugeRTE version 1.0.6 (2024-12-20)
+ * HugeRTE version 1.0.7 (2025-01-11)
  * Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
  * Copyright (c) 2024 HugeRTE contributors
  * Licensed under the MIT license (https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT)
+ */
+
+/**
  * This file bundles the code of DOMPurify, which is dual-licensed under the Mozilla Public License v2.0 and the Apache License, Version 2.0, meaning you can use it under either one of those licenses.
- * Copyright 2024 Dr.-Ing. Mario Heiderich, Cure53
+ * Copyright 2024 Dr.-Ing. Mario Heiderich, Cure53 and other contributors
+ * https://github.com/cure53/DOMPurify/blob/main/LICENSE
  * The code of DOMPurify included in this file has been modified. The latest original code of DOMPurify can be found at https://github.com/cure53/DOMPurify.
  */
 
@@ -23424,9 +23428,8 @@
         }
       }, skinUrl => {
         const skinContentCss = 'ui/' + skinUrl + (isInline ? '/content.inline' : '/content') + '.css';
-        const css = hugerte.Resource.get(skinContentCss);
-        if (isString(css)) {
-          loadRawCss(editor, skinContentCss, css, editor.ui.styleSheetLoader);
+        if (hugerte.Resource.has(skinContentCss)) {
+          editor.contentCSS.push(skinContentCss);
         } else {
           const skinResourceIdentifier = getSkinUrl(editor);
           if (skinResourceIdentifier) {
