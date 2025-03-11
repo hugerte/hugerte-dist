@@ -1,5 +1,5 @@
 /**
- * HugeRTE version 1.0.7 (2025-01-11)
+ * HugeRTE version 1.0.8 (2025-03-11)
  * Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
  * Copyright (c) 2024 HugeRTE contributors
  * Licensed under the MIT license (https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT)
@@ -202,7 +202,7 @@
               if (typeof document === 'undefined') {
                 return null;
               }
-              if ('currentScript' in document && 1 < 2) {
+              if (document.currentScript && document.currentScript.tagName === 'SCRIPT' && 1 < 2) {
                 return document.currentScript;
               }
               try {

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.8 - 2025-03-11
+
+### Fixed
+- Updated dependencies including those with security vulnerabilities.
+- Switched from a polynomial regular expression possibly creating a ReDoS vulnerabiliy to the native string trim method in hugerte.utils.Tools.trim.
+
 ## 1.0.7 - 2025-01-11
 
 ### Fixed
@@ -91,6 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed `InsertOrderedList` and `InsertUnorderedList` from core. #TINY-10644
 - Removed `closeButton` from `NotificationSpec`, close button in notification is now rendered by default. #TINY-10646
 - The autocompleter `ch` configuration property has been removed. Use the `trigger` property instead. #TINY-8929
+- The `promotion` init option has been removed. HugeRTE doesn't show an upgrade button regardless of it being present or not.
 
 ### Fixed
 - When deleting the last row in a table, the cursor would jump to the first cell (top left), instead of moving to the next adjacent cell in some cases. #TINY-6309
