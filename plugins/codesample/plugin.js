@@ -1,8 +1,16 @@
 /**
- * HugeRTE version 1.0.8 (2025-03-11)
+ * HugeRTE version 1.0.9 (2025-03-15)
  * Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
  * Copyright (c) 2024 HugeRTE contributors
  * Licensed under the MIT license (https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT)
+ */
+
+/**
+ * This file bundles code of Prism: Lightweight, robust, elegant syntax highlighting.
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @see https://github.com/PrismJS/prism/blob/master/LICENSE
  */
 
 (function () {
