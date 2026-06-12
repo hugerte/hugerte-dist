@@ -1,7 +1,7 @@
 /**
- * HugeRTE version 1.0.10 (2026-02-16)
+ * HugeRTE version 1.0.11 (2026-06-11)
  * Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
- * Copyright (c) 2024 HugeRTE contributors
+ * Copyright (c) 2026 HugeRTE contributors
  * Licensed under the MIT license (https://github.com/hugerte/hugerte/blob/main/LICENSE.TXT)
  */
 
@@ -9,7 +9,7 @@
  * This file bundles the code of DOMPurify, which is dual-licensed under the Mozilla Public License v2.0 and the Apache License, Version 2.0, meaning you can use it under either one of those licenses.
  * Copyright 2024 Dr.-Ing. Mario Heiderich, Cure53 and other contributors
  * https://github.com/cure53/DOMPurify/blob/main/LICENSE
- * The code of DOMPurify included in this file has been modified. The latest original code of DOMPurify can be found at https://github.com/cure53/DOMPurify.
+ * The latest original code of DOMPurify can be found at https://github.com/cure53/DOMPurify.
  */
 
 (function () {
@@ -2741,8 +2741,8 @@
     };
 
     const cachedSets = {
-      'html4': cached(() => getElementSets('html4')),
-      'html5': cached(() => getElementSets('html5')),
+      html4: cached(() => getElementSets('html4')),
+      html5: cached(() => getElementSets('html5')),
       'html5-strict': cached(() => getElementSets('html5-strict'))
     };
     const getElementsPreset = (type, name) => {
@@ -3996,7 +3996,7 @@
           delete this.events[id];
           try {
             delete target[this.expando];
-          } catch (ex) {
+          } catch (_ex) {
             target[this.expando] = null;
           }
         }
@@ -6486,7 +6486,7 @@
       const args = {
         'data-mce-type': 'bookmark',
         id,
-        'style': 'overflow:hidden;line-height:0px'
+        style: 'overflow:hidden;line-height:0px'
       };
       return filled ? dom.create('span', args, '&#xFEFF;') : dom.create('span', args);
     };
@@ -7123,7 +7123,7 @@
       });
       registerOption('inline_boundaries_selector', {
         processor: 'string',
-        default: 'a[href],code,span.mce-annotation'
+        default: 'a[href],code,sub,sup,span.mce-annotation'
       });
       registerOption('object_resizing', {
         processor: value => {
@@ -7873,7 +7873,7 @@
           dom.setStyle(caretContainer, 'caret-color', 'transparent');
           caretContainerNode = caretContainer;
           const caret = dom.create('div', {
-            'class': 'mce-visual-caret',
+            class: 'mce-visual-caret',
             'data-mce-bogus': 'all'
           });
           dom.setStyles(caret, { ...clientRect });
@@ -9797,7 +9797,7 @@
               startScrollWidth = rootElement.scrollWidth;
               startScrollHeight = rootElement.scrollHeight;
               resizeBackdrop = dom.add(rootElement, 'div', {
-                'class': 'mce-resize-backdrop',
+                class: 'mce-resize-backdrop',
                 'data-mce-bogus': 'all'
               });
               dom.setStyles(resizeBackdrop, {
@@ -9826,7 +9826,7 @@
                 dom.bind(rootDocument, 'mouseup', endGhostResize);
               }
               resizeHelper = dom.add(rootElement, 'div', {
-                'class': 'mce-resize-helper',
+                class: 'mce-resize-helper',
                 'data-mce-bogus': 'all'
               }, startW + ' &times; ' + startH);
             };
@@ -9835,11 +9835,11 @@
               dom.remove(handleElm);
             }
             handleElm = dom.add(rootElement, 'div', {
-              'id': 'mceResizeHandle' + name,
+              id: 'mceResizeHandle' + name,
               'data-mce-bogus': 'all',
-              'class': 'mce-resizehandle',
-              'unselectable': true,
-              'style': 'cursor:' + name + '-resize; margin:0; padding:0'
+              class: 'mce-resizehandle',
+              unselectable: true,
+              style: 'cursor:' + name + '-resize; margin:0; padding:0'
             });
             dom.bind(handleElm, 'mousedown', e => {
               e.stopImmediatePropagation();
@@ -9904,7 +9904,7 @@
       const disableGeckoResize = () => {
         try {
           editor.getDoc().execCommand('enableObjectResizing', false, 'false');
-        } catch (ex) {
+        } catch (_ex) {
         }
       };
       editor.on('init', () => {
@@ -10856,7 +10856,7 @@
       try {
         const root = getRootNode(SugarElement.fromDom(editor.getElement()));
         return active$1(root).fold(() => document.body, x => x.dom);
-      } catch (ex) {
+      } catch (_ex) {
         return document.body;
       }
     };
@@ -10950,7 +10950,7 @@
       if (body.setActive) {
         try {
           body.setActive();
-        } catch (ex) {
+        } catch (_ex) {
           body.focus();
         }
       } else {
@@ -13554,7 +13554,7 @@
     const createCaretContainer = fill => {
       const caretContainer = SugarElement.fromTag('span');
       setAll$1(caretContainer, {
-        'id': CARET_ID,
+        id: CARET_ID,
         'data-mce-bogus': '1',
         'data-mce-type': 'format-caret'
       });
@@ -13651,6 +13651,7 @@
         return Optional.none();
       }
     };
+    const isSubSupFormat = name => name === 'subscript' || name === 'superscript';
     const applyCaretFormat = (editor, name, vars) => {
       let caretContainer;
       const selection = editor.selection;
@@ -13683,6 +13684,13 @@
           editor.formatter.apply(name, vars, caretContainer);
         }
         selection.setCursorLocation(textNode, offset);
+        if (isSubSupFormat(name)) {
+          const selNode = selection.getNode();
+          if (selNode.nodeName.toLowerCase() !== name.slice(0, 3)) {
+            selection.select(caretContainer, true);
+            selection.collapse(true);
+          }
+        }
       }
     };
     const removeCaretFormat = (editor, name, vars, similar) => {
@@ -14294,7 +14302,7 @@
             if (isChildOfInlineParent(dom, startContainer, endContainer)) {
               const marker = Optional.from(startContainer.firstChild).getOr(startContainer);
               splitToFormatRoot(wrapWithSiblings(dom, marker, true, 'span', {
-                'id': '_start',
+                id: '_start',
                 'data-mce-type': 'bookmark'
               }));
               unwrap(true);
@@ -14303,18 +14311,18 @@
             if (isChildOfInlineParent(dom, endContainer, startContainer)) {
               const marker = Optional.from(endContainer.lastChild).getOr(endContainer);
               splitToFormatRoot(wrapWithSiblings(dom, marker, false, 'span', {
-                'id': '_end',
+                id: '_end',
                 'data-mce-type': 'bookmark'
               }));
               unwrap(false);
               return;
             }
             startContainer = wrap$1(dom, startContainer, 'span', {
-              'id': '_start',
+              id: '_start',
               'data-mce-type': 'bookmark'
             });
             endContainer = wrap$1(dom, endContainer, 'span', {
-              'id': '_end',
+              id: '_end',
               'data-mce-type': 'bookmark'
             });
             const newRng = dom.createRng();
@@ -14405,6 +14413,14 @@
         processChildElements(node, elm => hasFontSize(elm) && dom.isEditable(elm), applyStyle(dom, 'fontSize', ''));
         const inverseTagDescendants = filter$5(dom.select(format.inline === 'sup' ? 'sub' : 'sup', node), dom.isEditable);
         dom.remove(inverseTagDescendants, true);
+      }
+    };
+    const mergeSubSupWithSelection = (editor, format, vars, node) => {
+      const sel = editor.selection;
+      const bookmark = sel.isCollapsed() ? sel.getBookmark() : undefined;
+      mergeSubSup(editor.dom, format, vars, node);
+      if (bookmark) {
+        sel.moveToBookmark(bookmark);
       }
     };
     const mergeWithChildren = (editor, formatList, vars, node) => {
@@ -14640,7 +14656,7 @@
             mergeWithParents(ed, format, name, vars, node);
             mergeBackgroundColorAndFontSize(dom, format, vars, node);
             mergeTextDecorationsAndColor(dom, format, vars, node);
-            mergeSubSup(dom, format, vars, node);
+            mergeSubSupWithSelection(ed, format, vars, node);
             mergeSiblings(ed, format, vars, node);
           }
         });
@@ -14960,7 +14976,7 @@
       if (base64Encoded) {
         try {
           str = atob(data);
-        } catch (e) {
+        } catch (_e) {
           return Optional.none();
         }
       }
@@ -15212,7 +15228,7 @@
       }
     };
 
-    /*! @license DOMPurify 3.2.4 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.2.4/LICENSE */
+    /*! @license DOMPurify 3.4.0 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.4.0/LICENSE */
 
     const {
       entries,
@@ -15241,12 +15257,18 @@
       };
     }
     if (!apply) {
-      apply = function apply(fun, thisValue, args) {
-        return fun.apply(thisValue, args);
+      apply = function apply(func, thisArg) {
+        for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+          args[_key - 2] = arguments[_key];
+        }
+        return func.apply(thisArg, args);
       };
     }
     if (!construct) {
-      construct = function construct(Func, args) {
+      construct = function construct(Func) {
+        for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+          args[_key2 - 1] = arguments[_key2];
+        }
         return new Func(...args);
       };
     }
@@ -15272,8 +15294,11 @@
      */
     function unapply(func) {
       return function (thisArg) {
-        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-          args[_key - 1] = arguments[_key];
+        if (thisArg instanceof RegExp) {
+          thisArg.lastIndex = 0;
+        }
+        for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+          args[_key3 - 1] = arguments[_key3];
         }
         return apply(func, thisArg, args);
       };
@@ -15284,12 +15309,12 @@
      * @param func - The constructor function to be wrapped and called.
      * @returns A new function that constructs an instance of the given constructor function with the provided arguments.
      */
-    function unconstruct(func) {
+    function unconstruct(Func) {
       return function () {
-        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-          args[_key2] = arguments[_key2];
+        for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+          args[_key4] = arguments[_key4];
         }
-        return construct(func, args);
+        return construct(Func, args);
       };
     }
     /**
@@ -15388,8 +15413,8 @@
       return fallbackValue;
     }
 
-    const html$1 = freeze(['a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'content', 'data', 'datalist', 'dd', 'decorator', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt', 'element', 'em', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'img', 'input', 'ins', 'kbd', 'label', 'legend', 'li', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meter', 'nav', 'nobr', 'ol', 'optgroup', 'option', 'output', 'p', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'section', 'select', 'shadow', 'small', 'source', 'spacer', 'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr']);
-    const svg$1 = freeze(['svg', 'a', 'altglyph', 'altglyphdef', 'altglyphitem', 'animatecolor', 'animatemotion', 'animatetransform', 'circle', 'clippath', 'defs', 'desc', 'ellipse', 'filter', 'font', 'g', 'glyph', 'glyphref', 'hkern', 'image', 'line', 'lineargradient', 'marker', 'mask', 'metadata', 'mpath', 'path', 'pattern', 'polygon', 'polyline', 'radialgradient', 'rect', 'stop', 'style', 'switch', 'symbol', 'text', 'textpath', 'title', 'tref', 'tspan', 'view', 'vkern']);
+    const html$1 = freeze(['a', 'abbr', 'acronym', 'address', 'area', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'content', 'data', 'datalist', 'dd', 'decorator', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt', 'element', 'em', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'img', 'input', 'ins', 'kbd', 'label', 'legend', 'li', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meter', 'nav', 'nobr', 'ol', 'optgroup', 'option', 'output', 'p', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'search', 'section', 'select', 'shadow', 'slot', 'small', 'source', 'spacer', 'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr']);
+    const svg$1 = freeze(['svg', 'a', 'altglyph', 'altglyphdef', 'altglyphitem', 'animatecolor', 'animatemotion', 'animatetransform', 'circle', 'clippath', 'defs', 'desc', 'ellipse', 'enterkeyhint', 'exportparts', 'filter', 'font', 'g', 'glyph', 'glyphref', 'hkern', 'image', 'inputmode', 'line', 'lineargradient', 'marker', 'mask', 'metadata', 'mpath', 'part', 'path', 'pattern', 'polygon', 'polyline', 'radialgradient', 'rect', 'stop', 'style', 'switch', 'symbol', 'text', 'textpath', 'title', 'tref', 'tspan', 'view', 'vkern']);
     const svgFilters = freeze(['feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feDistantLight', 'feDropShadow', 'feFlood', 'feFuncA', 'feFuncB', 'feFuncG', 'feFuncR', 'feGaussianBlur', 'feImage', 'feMerge', 'feMergeNode', 'feMorphology', 'feOffset', 'fePointLight', 'feSpecularLighting', 'feSpotLight', 'feTile', 'feTurbulence']);
     // List of SVG elements that are disallowed by default.
     // We still need to know them so that we can do namespace
@@ -15402,9 +15427,9 @@
     const mathMlDisallowed = freeze(['maction', 'maligngroup', 'malignmark', 'mlongdiv', 'mscarries', 'mscarry', 'msgroup', 'mstack', 'msline', 'msrow', 'semantics', 'annotation', 'annotation-xml', 'mprescripts', 'none']);
     const text = freeze(['#text']);
 
-    const html = freeze(['accept', 'action', 'align', 'alt', 'autocapitalize', 'autocomplete', 'autopictureinpicture', 'autoplay', 'background', 'bgcolor', 'border', 'capture', 'cellpadding', 'cellspacing', 'checked', 'cite', 'class', 'clear', 'color', 'cols', 'colspan', 'controls', 'controlslist', 'coords', 'crossorigin', 'datetime', 'decoding', 'default', 'dir', 'disabled', 'disablepictureinpicture', 'disableremoteplayback', 'download', 'draggable', 'enctype', 'enterkeyhint', 'face', 'for', 'headers', 'height', 'hidden', 'high', 'href', 'hreflang', 'id', 'inputmode', 'integrity', 'ismap', 'kind', 'label', 'lang', 'list', 'loading', 'loop', 'low', 'max', 'maxlength', 'media', 'method', 'min', 'minlength', 'multiple', 'muted', 'name', 'nonce', 'noshade', 'novalidate', 'nowrap', 'open', 'optimum', 'pattern', 'placeholder', 'playsinline', 'popover', 'popovertarget', 'popovertargetaction', 'poster', 'preload', 'pubdate', 'radiogroup', 'readonly', 'rel', 'required', 'rev', 'reversed', 'role', 'rows', 'rowspan', 'spellcheck', 'scope', 'selected', 'shape', 'size', 'sizes', 'span', 'srclang', 'start', 'src', 'srcset', 'step', 'style', 'summary', 'tabindex', 'title', 'translate', 'type', 'usemap', 'valign', 'value', 'width', 'wrap', 'xmlns', 'slot']);
-    const svg = freeze(['accent-height', 'accumulate', 'additive', 'alignment-baseline', 'amplitude', 'ascent', 'attributename', 'attributetype', 'azimuth', 'basefrequency', 'baseline-shift', 'begin', 'bias', 'by', 'class', 'clip', 'clippathunits', 'clip-path', 'clip-rule', 'color', 'color-interpolation', 'color-interpolation-filters', 'color-profile', 'color-rendering', 'cx', 'cy', 'd', 'dx', 'dy', 'diffuseconstant', 'direction', 'display', 'divisor', 'dur', 'edgemode', 'elevation', 'end', 'exponent', 'fill', 'fill-opacity', 'fill-rule', 'filter', 'filterunits', 'flood-color', 'flood-opacity', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'fx', 'fy', 'g1', 'g2', 'glyph-name', 'glyphref', 'gradientunits', 'gradienttransform', 'height', 'href', 'id', 'image-rendering', 'in', 'in2', 'intercept', 'k', 'k1', 'k2', 'k3', 'k4', 'kerning', 'keypoints', 'keysplines', 'keytimes', 'lang', 'lengthadjust', 'letter-spacing', 'kernelmatrix', 'kernelunitlength', 'lighting-color', 'local', 'marker-end', 'marker-mid', 'marker-start', 'markerheight', 'markerunits', 'markerwidth', 'maskcontentunits', 'maskunits', 'max', 'mask', 'media', 'method', 'mode', 'min', 'name', 'numoctaves', 'offset', 'operator', 'opacity', 'order', 'orient', 'orientation', 'origin', 'overflow', 'paint-order', 'path', 'pathlength', 'patterncontentunits', 'patterntransform', 'patternunits', 'points', 'preservealpha', 'preserveaspectratio', 'primitiveunits', 'r', 'rx', 'ry', 'radius', 'refx', 'refy', 'repeatcount', 'repeatdur', 'restart', 'result', 'rotate', 'scale', 'seed', 'shape-rendering', 'slope', 'specularconstant', 'specularexponent', 'spreadmethod', 'startoffset', 'stddeviation', 'stitchtiles', 'stop-color', 'stop-opacity', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'stroke', 'stroke-width', 'style', 'surfacescale', 'systemlanguage', 'tabindex', 'tablevalues', 'targetx', 'targety', 'transform', 'transform-origin', 'text-anchor', 'text-decoration', 'text-rendering', 'textlength', 'type', 'u1', 'u2', 'unicode', 'values', 'viewbox', 'visibility', 'version', 'vert-adv-y', 'vert-origin-x', 'vert-origin-y', 'width', 'word-spacing', 'wrap', 'writing-mode', 'xchannelselector', 'ychannelselector', 'x', 'x1', 'x2', 'xmlns', 'y', 'y1', 'y2', 'z', 'zoomandpan']);
-    const mathMl = freeze(['accent', 'accentunder', 'align', 'bevelled', 'close', 'columnsalign', 'columnlines', 'columnspan', 'denomalign', 'depth', 'dir', 'display', 'displaystyle', 'encoding', 'fence', 'frame', 'height', 'href', 'id', 'largeop', 'length', 'linethickness', 'lspace', 'lquote', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'maxsize', 'minsize', 'movablelimits', 'notation', 'numalign', 'open', 'rowalign', 'rowlines', 'rowspacing', 'rowspan', 'rspace', 'rquote', 'scriptlevel', 'scriptminsize', 'scriptsizemultiplier', 'selection', 'separator', 'separators', 'stretchy', 'subscriptshift', 'supscriptshift', 'symmetric', 'voffset', 'width', 'xmlns']);
+    const html = freeze(['accept', 'action', 'align', 'alt', 'autocapitalize', 'autocomplete', 'autopictureinpicture', 'autoplay', 'background', 'bgcolor', 'border', 'capture', 'cellpadding', 'cellspacing', 'checked', 'cite', 'class', 'clear', 'color', 'cols', 'colspan', 'controls', 'controlslist', 'coords', 'crossorigin', 'datetime', 'decoding', 'default', 'dir', 'disabled', 'disablepictureinpicture', 'disableremoteplayback', 'download', 'draggable', 'enctype', 'enterkeyhint', 'exportparts', 'face', 'for', 'headers', 'height', 'hidden', 'high', 'href', 'hreflang', 'id', 'inert', 'inputmode', 'integrity', 'ismap', 'kind', 'label', 'lang', 'list', 'loading', 'loop', 'low', 'max', 'maxlength', 'media', 'method', 'min', 'minlength', 'multiple', 'muted', 'name', 'nonce', 'noshade', 'novalidate', 'nowrap', 'open', 'optimum', 'part', 'pattern', 'placeholder', 'playsinline', 'popover', 'popovertarget', 'popovertargetaction', 'poster', 'preload', 'pubdate', 'radiogroup', 'readonly', 'rel', 'required', 'rev', 'reversed', 'role', 'rows', 'rowspan', 'spellcheck', 'scope', 'selected', 'shape', 'size', 'sizes', 'slot', 'span', 'srclang', 'start', 'src', 'srcset', 'step', 'style', 'summary', 'tabindex', 'title', 'translate', 'type', 'usemap', 'valign', 'value', 'width', 'wrap', 'xmlns', 'slot']);
+    const svg = freeze(['accent-height', 'accumulate', 'additive', 'alignment-baseline', 'amplitude', 'ascent', 'attributename', 'attributetype', 'azimuth', 'basefrequency', 'baseline-shift', 'begin', 'bias', 'by', 'class', 'clip', 'clippathunits', 'clip-path', 'clip-rule', 'color', 'color-interpolation', 'color-interpolation-filters', 'color-profile', 'color-rendering', 'cx', 'cy', 'd', 'dx', 'dy', 'diffuseconstant', 'direction', 'display', 'divisor', 'dur', 'edgemode', 'elevation', 'end', 'exponent', 'fill', 'fill-opacity', 'fill-rule', 'filter', 'filterunits', 'flood-color', 'flood-opacity', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'fx', 'fy', 'g1', 'g2', 'glyph-name', 'glyphref', 'gradientunits', 'gradienttransform', 'height', 'href', 'id', 'image-rendering', 'in', 'in2', 'intercept', 'k', 'k1', 'k2', 'k3', 'k4', 'kerning', 'keypoints', 'keysplines', 'keytimes', 'lang', 'lengthadjust', 'letter-spacing', 'kernelmatrix', 'kernelunitlength', 'lighting-color', 'local', 'marker-end', 'marker-mid', 'marker-start', 'markerheight', 'markerunits', 'markerwidth', 'maskcontentunits', 'maskunits', 'max', 'mask', 'mask-type', 'media', 'method', 'mode', 'min', 'name', 'numoctaves', 'offset', 'operator', 'opacity', 'order', 'orient', 'orientation', 'origin', 'overflow', 'paint-order', 'path', 'pathlength', 'patterncontentunits', 'patterntransform', 'patternunits', 'points', 'preservealpha', 'preserveaspectratio', 'primitiveunits', 'r', 'rx', 'ry', 'radius', 'refx', 'refy', 'repeatcount', 'repeatdur', 'restart', 'result', 'rotate', 'scale', 'seed', 'shape-rendering', 'slope', 'specularconstant', 'specularexponent', 'spreadmethod', 'startoffset', 'stddeviation', 'stitchtiles', 'stop-color', 'stop-opacity', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'stroke', 'stroke-width', 'style', 'surfacescale', 'systemlanguage', 'tabindex', 'tablevalues', 'targetx', 'targety', 'transform', 'transform-origin', 'text-anchor', 'text-decoration', 'text-rendering', 'textlength', 'type', 'u1', 'u2', 'unicode', 'values', 'viewbox', 'visibility', 'version', 'vert-adv-y', 'vert-origin-x', 'vert-origin-y', 'width', 'word-spacing', 'wrap', 'writing-mode', 'xchannelselector', 'ychannelselector', 'x', 'x1', 'x2', 'xmlns', 'y', 'y1', 'y2', 'z', 'zoomandpan']);
+    const mathMl = freeze(['accent', 'accentunder', 'align', 'bevelled', 'close', 'columnalign', 'columnlines', 'columnspacing', 'columnspan', 'denomalign', 'depth', 'dir', 'display', 'displaystyle', 'encoding', 'fence', 'frame', 'height', 'href', 'id', 'largeop', 'length', 'linethickness', 'lquote', 'lspace', 'mathbackground', 'mathcolor', 'mathsize', 'mathvariant', 'maxsize', 'minsize', 'movablelimits', 'notation', 'numalign', 'open', 'rowalign', 'rowlines', 'rowspacing', 'rowspan', 'rspace', 'rquote', 'scriptlevel', 'scriptminsize', 'scriptsizemultiplier', 'selection', 'separator', 'separators', 'stretchy', 'subscriptshift', 'supscriptshift', 'symmetric', 'voffset', 'width', 'xmlns']);
     const xml = freeze(['xlink:href', 'xml:id', 'xlink:title', 'xml:space', 'xmlns:xlink']);
 
     // eslint-disable-next-line unicorn/better-regex
@@ -15413,7 +15438,7 @@
     const TMPLIT_EXPR = seal(/\$\{[\w\W]*/gm); // eslint-disable-line unicorn/better-regex
     const DATA_ATTR = seal(/^data-[\-\w.\u00B7-\uFFFF]+$/); // eslint-disable-line no-useless-escape
     const ARIA_ATTR = seal(/^aria-[\-\w]+$/); // eslint-disable-line no-useless-escape
-    const IS_ALLOWED_URI = seal(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i // eslint-disable-line no-useless-escape
+    const IS_ALLOWED_URI = seal(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp|matrix):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i // eslint-disable-line no-useless-escape
     );
     const IS_SCRIPT_OR_DATA = seal(/^(?:\w+script|data):/i);
     const ATTR_WHITESPACE = seal(/[\u0000-\u0020\u00A0\u1680\u180E\u2000-\u2029\u205F\u3000]/g // eslint-disable-line no-control-regex
@@ -15439,20 +15464,11 @@
     // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
     const NODE_TYPE = {
       element: 1,
-      attribute: 2,
       text: 3,
-      cdataSection: 4,
-      entityReference: 5,
-      // Deprecated
-      entityNode: 6,
       // Deprecated
       progressingInstruction: 7,
       comment: 8,
-      document: 9,
-      documentType: 10,
-      documentFragment: 11,
-      notation: 12 // Deprecated
-    };
+      document: 9};
     const getGlobal = function getGlobal() {
       return typeof window === 'undefined' ? null : window;
     };
@@ -15510,7 +15526,7 @@
     function createDOMPurify() {
       let window = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getGlobal();
       const DOMPurify = root => createDOMPurify(root);
-      DOMPurify.version = '3.2.4';
+      DOMPurify.version = '3.4.0';
       DOMPurify.removed = [];
       if (!window || !window.document || window.document.nodeType !== NODE_TYPE.document || !window.Element) {
         // Not running in a browser, provide a factory function
@@ -15621,6 +15637,21 @@
       let FORBID_TAGS = null;
       /* Explicitly forbidden attributes (overrides ALLOWED_ATTR/ADD_ATTR) */
       let FORBID_ATTR = null;
+      /* Config object to store ADD_TAGS/ADD_ATTR functions (when used as functions) */
+      const EXTRA_ELEMENT_HANDLING = Object.seal(create$7(null, {
+        tagCheck: {
+          writable: true,
+          configurable: false,
+          enumerable: true,
+          value: null
+        },
+        attributeCheck: {
+          writable: true,
+          configurable: false,
+          enumerable: true,
+          value: null
+        }
+      }));
       /* Decide if ARIA attributes are okay */
       let ALLOW_ARIA_ATTR = true;
       /* Decide if custom data attributes are okay */
@@ -15749,8 +15780,8 @@
         URI_SAFE_ATTRIBUTES = objectHasOwnProperty(cfg, 'ADD_URI_SAFE_ATTR') ? addToSet(clone(DEFAULT_URI_SAFE_ATTRIBUTES), cfg.ADD_URI_SAFE_ATTR, transformCaseFunc) : DEFAULT_URI_SAFE_ATTRIBUTES;
         DATA_URI_TAGS = objectHasOwnProperty(cfg, 'ADD_DATA_URI_TAGS') ? addToSet(clone(DEFAULT_DATA_URI_TAGS), cfg.ADD_DATA_URI_TAGS, transformCaseFunc) : DEFAULT_DATA_URI_TAGS;
         FORBID_CONTENTS = objectHasOwnProperty(cfg, 'FORBID_CONTENTS') ? addToSet({}, cfg.FORBID_CONTENTS, transformCaseFunc) : DEFAULT_FORBID_CONTENTS;
-        FORBID_TAGS = objectHasOwnProperty(cfg, 'FORBID_TAGS') ? addToSet({}, cfg.FORBID_TAGS, transformCaseFunc) : {};
-        FORBID_ATTR = objectHasOwnProperty(cfg, 'FORBID_ATTR') ? addToSet({}, cfg.FORBID_ATTR, transformCaseFunc) : {};
+        FORBID_TAGS = objectHasOwnProperty(cfg, 'FORBID_TAGS') ? addToSet({}, cfg.FORBID_TAGS, transformCaseFunc) : clone({});
+        FORBID_ATTR = objectHasOwnProperty(cfg, 'FORBID_ATTR') ? addToSet({}, cfg.FORBID_ATTR, transformCaseFunc) : clone({});
         USE_PROFILES = objectHasOwnProperty(cfg, 'USE_PROFILES') ? cfg.USE_PROFILES : false;
         ALLOW_ARIA_ATTR = cfg.ALLOW_ARIA_ATTR !== false; // Default true
         ALLOW_DATA_ATTR = cfg.ALLOW_DATA_ATTR !== false; // Default true
@@ -15771,7 +15802,7 @@
         NAMESPACE = cfg.NAMESPACE || HTML_NAMESPACE;
         MATHML_TEXT_INTEGRATION_POINTS = cfg.MATHML_TEXT_INTEGRATION_POINTS || MATHML_TEXT_INTEGRATION_POINTS;
         HTML_INTEGRATION_POINTS = cfg.HTML_INTEGRATION_POINTS || HTML_INTEGRATION_POINTS;
-        CUSTOM_ELEMENT_HANDLING = cfg.CUSTOM_ELEMENT_HANDLING || {};
+        CUSTOM_ELEMENT_HANDLING = cfg.CUSTOM_ELEMENT_HANDLING || create$7(null);
         if (cfg.CUSTOM_ELEMENT_HANDLING && isRegexOrFunction(cfg.CUSTOM_ELEMENT_HANDLING.tagNameCheck)) {
           CUSTOM_ELEMENT_HANDLING.tagNameCheck = cfg.CUSTOM_ELEMENT_HANDLING.tagNameCheck;
         }
@@ -15790,7 +15821,7 @@
         /* Parse profile info */
         if (USE_PROFILES) {
           ALLOWED_TAGS = addToSet({}, text);
-          ALLOWED_ATTR = [];
+          ALLOWED_ATTR = create$7(null);
           if (USE_PROFILES.html === true) {
             addToSet(ALLOWED_TAGS, html$1);
             addToSet(ALLOWED_ATTR, html);
@@ -15811,18 +15842,30 @@
             addToSet(ALLOWED_ATTR, xml);
           }
         }
+        /* Always reset function-based ADD_TAGS / ADD_ATTR checks to prevent
+         * leaking across calls when switching from function to array config */
+        EXTRA_ELEMENT_HANDLING.tagCheck = null;
+        EXTRA_ELEMENT_HANDLING.attributeCheck = null;
         /* Merge configuration parameters */
         if (cfg.ADD_TAGS) {
-          if (ALLOWED_TAGS === DEFAULT_ALLOWED_TAGS) {
-            ALLOWED_TAGS = clone(ALLOWED_TAGS);
+          if (typeof cfg.ADD_TAGS === 'function') {
+            EXTRA_ELEMENT_HANDLING.tagCheck = cfg.ADD_TAGS;
+          } else {
+            if (ALLOWED_TAGS === DEFAULT_ALLOWED_TAGS) {
+              ALLOWED_TAGS = clone(ALLOWED_TAGS);
+            }
+            addToSet(ALLOWED_TAGS, cfg.ADD_TAGS, transformCaseFunc);
           }
-          addToSet(ALLOWED_TAGS, cfg.ADD_TAGS, transformCaseFunc);
         }
         if (cfg.ADD_ATTR) {
-          if (ALLOWED_ATTR === DEFAULT_ALLOWED_ATTR) {
-            ALLOWED_ATTR = clone(ALLOWED_ATTR);
+          if (typeof cfg.ADD_ATTR === 'function') {
+            EXTRA_ELEMENT_HANDLING.attributeCheck = cfg.ADD_ATTR;
+          } else {
+            if (ALLOWED_ATTR === DEFAULT_ALLOWED_ATTR) {
+              ALLOWED_ATTR = clone(ALLOWED_ATTR);
+            }
+            addToSet(ALLOWED_ATTR, cfg.ADD_ATTR, transformCaseFunc);
           }
-          addToSet(ALLOWED_ATTR, cfg.ADD_ATTR, transformCaseFunc);
         }
         if (cfg.ADD_URI_SAFE_ATTR) {
           addToSet(URI_SAFE_ATTRIBUTES, cfg.ADD_URI_SAFE_ATTR, transformCaseFunc);
@@ -15832,6 +15875,12 @@
             FORBID_CONTENTS = clone(FORBID_CONTENTS);
           }
           addToSet(FORBID_CONTENTS, cfg.FORBID_CONTENTS, transformCaseFunc);
+        }
+        if (cfg.ADD_FORBID_CONTENTS) {
+          if (FORBID_CONTENTS === DEFAULT_FORBID_CONTENTS) {
+            FORBID_CONTENTS = clone(FORBID_CONTENTS);
+          }
+          addToSet(FORBID_CONTENTS, cfg.ADD_FORBID_CONTENTS, transformCaseFunc);
         }
         /* Add #text in case KEEP_CONTENT is set to true */
         if (KEEP_CONTENT) {
@@ -16115,7 +16164,12 @@
           allowedTags: ALLOWED_TAGS
         });
         /* Detect mXSS attempts abusing namespace confusion */
-        if (currentNode.hasChildNodes() && !_isNode(currentNode.firstElementChild) && regExpTest(/<[/\w]/g, currentNode.innerHTML) && regExpTest(/<[/\w]/g, currentNode.textContent)) {
+        if (SAFE_FOR_XML && currentNode.hasChildNodes() && !_isNode(currentNode.firstElementChild) && regExpTest(/<[/\w!]/g, currentNode.innerHTML) && regExpTest(/<[/\w!]/g, currentNode.textContent)) {
+          _forceRemove(currentNode);
+          return true;
+        }
+        /* Remove risky CSS construction leading to mXSS */
+        if (SAFE_FOR_XML && currentNode.namespaceURI === HTML_NAMESPACE && tagName === 'style' && _isNode(currentNode.firstElementChild)) {
           _forceRemove(currentNode);
           return true;
         }
@@ -16130,7 +16184,7 @@
           return true;
         }
         /* Remove element if anything forbids its presence */
-        if (!ALLOWED_TAGS[tagName] || FORBID_TAGS[tagName]) {
+        if (FORBID_TAGS[tagName] || !(EXTRA_ELEMENT_HANDLING.tagCheck instanceof Function && EXTRA_ELEMENT_HANDLING.tagCheck(tagName)) && !ALLOWED_TAGS[tagName]) {
           /* Check if we have a custom element to handle */
           if (!FORBID_TAGS[tagName] && _isBasicCustomElement(tagName)) {
             if (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, tagName)) {
@@ -16194,6 +16248,10 @@
        */
       // eslint-disable-next-line complexity
       const _isValidAttribute = function _isValidAttribute(lcTag, lcName, value) {
+        /* FORBID_ATTR must always win, even if ADD_ATTR predicate would allow it */
+        if (FORBID_ATTR[lcName]) {
+          return false;
+        }
         /* Make sure attribute cannot clobber */
         if (SANITIZE_DOM && (lcName === 'id' || lcName === 'name') && (value in document || value in formElement)) {
           return false;
@@ -16202,12 +16260,12 @@
             (https://html.spec.whatwg.org/multipage/dom.html#embedding-custom-non-visible-data-with-the-data-*-attributes)
             XML-compatible (https://html.spec.whatwg.org/multipage/infrastructure.html#xml-compatible and http://www.w3.org/TR/xml/#d0e804)
             We don't need to check the value; it's always URI safe. */
-        if (ALLOW_DATA_ATTR && !FORBID_ATTR[lcName] && regExpTest(DATA_ATTR, lcName)) ; else if (ALLOW_ARIA_ATTR && regExpTest(ARIA_ATTR, lcName)) ; else if (!ALLOWED_ATTR[lcName] || FORBID_ATTR[lcName]) {
+        if (ALLOW_DATA_ATTR && !FORBID_ATTR[lcName] && regExpTest(DATA_ATTR, lcName)) ; else if (ALLOW_ARIA_ATTR && regExpTest(ARIA_ATTR, lcName)) ; else if (EXTRA_ELEMENT_HANDLING.attributeCheck instanceof Function && EXTRA_ELEMENT_HANDLING.attributeCheck(lcName, lcTag)) ; else if (!ALLOWED_ATTR[lcName] || FORBID_ATTR[lcName]) {
           if (
           // First condition does a very basic check if a) it's basically a valid custom element tagname AND
           // b) if the tagName passes whatever the user has configured for CUSTOM_ELEMENT_HANDLING.tagNameCheck
           // and c) if the attribute name passes whatever the user has configured for CUSTOM_ELEMENT_HANDLING.attributeNameCheck
-          _isBasicCustomElement(lcTag) && (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, lcTag) || CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(lcTag)) && (CUSTOM_ELEMENT_HANDLING.attributeNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.attributeNameCheck, lcName) || CUSTOM_ELEMENT_HANDLING.attributeNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.attributeNameCheck(lcName)) ||
+          _isBasicCustomElement(lcTag) && (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, lcTag) || CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(lcTag)) && (CUSTOM_ELEMENT_HANDLING.attributeNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.attributeNameCheck, lcName) || CUSTOM_ELEMENT_HANDLING.attributeNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.attributeNameCheck(lcName, lcTag)) ||
           // Alternative, second condition checks if it's an `is`-attribute, AND
           // the value passes whatever the user has configured for CUSTOM_ELEMENT_HANDLING.tagNameCheck
           lcName === 'is' && CUSTOM_ELEMENT_HANDLING.allowCustomizedBuiltInElements && (CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof RegExp && regExpTest(CUSTOM_ELEMENT_HANDLING.tagNameCheck, value) || CUSTOM_ELEMENT_HANDLING.tagNameCheck instanceof Function && CUSTOM_ELEMENT_HANDLING.tagNameCheck(value))) ; else {
@@ -16267,8 +16325,8 @@
             value: attrValue
           } = attr;
           const lcName = transformCaseFunc(name);
-          let value = name === 'value' ? attrValue : stringTrim(attrValue);
-          const initValue = value;
+          const initValue = attrValue;
+          let value = name === 'value' ? initValue : stringTrim(initValue);
           /* Execute a hook if present */
           hookEvent.attrName = lcName;
           hookEvent.attrValue = value;
@@ -16286,7 +16344,12 @@
             value = SANITIZE_NAMED_PROPS_PREFIX + value;
           }
           /* Work around a security issue with comments inside attributes */
-          if (SAFE_FOR_XML && regExpTest(/((--!?|])>)|<\/(style|title)/i, value)) {
+          if (SAFE_FOR_XML && regExpTest(/((--!?|])>)|<\/(style|script|title|xmp|textarea|noscript|iframe|noembed|noframes)/i, value)) {
+            _removeAttribute(name, currentNode);
+            continue;
+          }
+          /* Make sure we cannot easily use animated hrefs, even if animations are allowed */
+          if (lcName === 'attributename' && stringMatch(value, 'href')) {
             _removeAttribute(name, currentNode);
             continue;
           }
@@ -16347,7 +16410,9 @@
               } else {
                 arrayPop(DOMPurify.removed);
               }
-            } catch (_) {}
+            } catch (_) {
+              _removeAttribute(name, currentNode);
+            }
           }
         }
         /* Execute a hook if present */
@@ -16358,7 +16423,7 @@
        *
        * @param fragment to iterate over recursively
        */
-      const _sanitizeShadowDOM = function _sanitizeShadowDOM(fragment) {
+      const _sanitizeShadowDOM2 = function _sanitizeShadowDOM(fragment) {
         let shadowNode = null;
         const shadowIterator = _createNodeIterator(fragment);
         /* Execute a hook if present */
@@ -16372,7 +16437,7 @@
           _sanitizeAttributes(shadowNode);
           /* Deep shadow DOM detected */
           if (shadowNode.content instanceof DocumentFragment) {
-            _sanitizeShadowDOM(shadowNode.content);
+            _sanitizeShadowDOM2(shadowNode.content);
           }
         }
         /* Execute a hook if present */
@@ -16467,7 +16532,7 @@
           _sanitizeAttributes(currentNode);
           /* Shadow DOM detected, sanitize it */
           if (currentNode.content instanceof DocumentFragment) {
-            _sanitizeShadowDOM(currentNode.content);
+            _sanitizeShadowDOM2(currentNode.content);
           }
         }
         /* If we sanitized `dirty` in-place, return it. */
@@ -16476,6 +16541,14 @@
         }
         /* Return sanitized string or DOM */
         if (RETURN_DOM) {
+          if (SAFE_FOR_TEMPLATES) {
+            body.normalize();
+            let html = body.innerHTML;
+            arrayForEach([MUSTACHE_EXPR, ERB_EXPR, TMPLIT_EXPR], expr => {
+              html = stringReplace(html, expr, ' ');
+            });
+            body.innerHTML = html;
+          }
           if (RETURN_DOM_FRAGMENT) {
             returnNode = createDocumentFragment.call(body.ownerDocument);
             while (body.firstChild) {
@@ -16588,7 +16661,7 @@
     const decodeUri = encodedUri => {
       try {
         return decodeURIComponent(encodedUri);
-      } catch (ex) {
+      } catch (_ex) {
         return unescape(encodedUri);
       }
     };
@@ -16939,8 +17012,12 @@
         evt.forceKeepAttr = true;
       }
     };
+    const isEventHandlerAttr = name => /^on[a-z]/i.test(name);
     const shouldKeepAttribute = (settings, schema, scope, tagName, attrName, attrValue) => {
       if (scope !== 'html' && !isNonHtmlElementRootName(tagName)) {
+        if (isEventHandlerAttr(attrName)) {
+          return false;
+        }
         return true;
       }
       return !(attrName in filteredUrlAttrs && isInvalidUri(settings, attrValue, tagName)) && (!settings.validate || schema.isValid(tagName, attrName) || startsWith(attrName, 'data-') || startsWith(attrName, 'aria-'));
@@ -17601,7 +17678,7 @@
       cleanupInputNames(rangeContentClone);
       const bin = editor.dom.add(body, contextNodeName, {
         'data-mce-bogus': 'all',
-        'style': 'overflow: hidden; opacity: 0;'
+        style: 'overflow: hidden; opacity: 0;'
       }, rangeContentClone.dom);
       const text = getInnerText(bin);
       const nonRenderedText = trim$2((_a = bin.textContent) !== null && _a !== void 0 ? _a : '');
@@ -18503,7 +18580,7 @@
         const tryCompareBoundaryPoints = (how, sourceRange, destinationRange) => {
           try {
             return sourceRange.compareBoundaryPoints(how, destinationRange);
-          } catch (ex) {
+          } catch (_ex) {
             return -1;
           }
         };
@@ -18524,7 +18601,7 @@
             }
             rng = processRanges(editor, [rng])[0];
           }
-        } catch (ex) {
+        } catch (_ex) {
         }
         if (!rng) {
           rng = doc.createRange();
@@ -18559,7 +18636,7 @@
           try {
             sel.removeAllRanges();
             sel.addRange(rng);
-          } catch (ex) {
+          } catch (_ex) {
           }
           if (forward === false && sel.extend) {
             sel.collapse(rng.endContainer, rng.endOffset);
@@ -18605,7 +18682,7 @@
           anchorRange.collapse(true);
           focusRange.setStart(focusNode, sel.focusOffset);
           focusRange.collapse(true);
-        } catch (e) {
+        } catch (_e) {
           return true;
         }
         return anchorRange.compareBoundaryPoints(anchorRange.START_TO_START, focusRange) <= 0;
@@ -18767,7 +18844,21 @@
           const node = nodes[i];
           let value = node.attr(internalName);
           if (value !== undefined) {
-            node.attr(name, value.length > 0 ? value : null);
+            if (name === 'style') {
+              value = dom.serializeStyle(dom.parseStyle(value), node.name);
+            } else {
+              const safeUriOptions = {
+                allow_script_urls: settings.allow_script_urls,
+                allow_html_data_urls: settings.allow_html_data_urls,
+                allow_svg_data_urls: settings.allow_svg_data_urls
+              };
+              if (isString(value) && !URI.isDomSafe(value, node.name, safeUriOptions)) {
+                value = undefined;
+              } else if (urlConverter && isString(value)) {
+                value = urlConverter.call(urlConverterScope, value, name, node.name);
+              }
+            }
+            node.attr(name, isString(value) && value.length > 0 ? value : null);
             node.attr(internalName, null);
           } else {
             value = node.attr(name);
@@ -18843,10 +18934,20 @@
             node.type = 4;
             node.value = dom.decode(value.replace(/^\[CDATA\[|\]\]$/g, ''));
           } else if ((value === null || value === void 0 ? void 0 : value.indexOf('mce:protected ')) === 0) {
-            node.name = '#text';
-            node.type = 3;
-            node.raw = true;
-            node.value = unescape(value).substr(14);
+            const decoded = unescape(value).substr(14);
+            const protectPatterns = settings.protect;
+            const isProtected = protectPatterns && protectPatterns.length > 0 && exists(protectPatterns, pattern => {
+              const match = decoded.match(pattern);
+              return match !== null && match[0] === decoded;
+            });
+            if (isProtected) {
+              node.name = '#text';
+              node.type = 3;
+              node.raw = true;
+              node.value = decoded;
+            } else {
+              node.remove();
+            }
           }
         }
       });
@@ -19924,7 +20025,7 @@
         const src = editor.convertURL(resultUri, 'src');
         replaceUrlInUndoStack(image.src, resultUri);
         setAll$1(SugarElement.fromDom(image), {
-          'src': shouldReuseFileName(editor) ? cacheInvalidator(resultUri) : resultUri,
+          src: shouldReuseFileName(editor) ? cacheInvalidator(resultUri) : resultUri,
           'data-mce-src': src
         });
       };
@@ -20359,6 +20460,27 @@
         subscript: { inline: 'sub' },
         superscript: { inline: 'sup' },
         code: { inline: 'code' },
+        uppercase: {
+          inline: 'span',
+          styles: { textTransform: 'uppercase' },
+          exact: true
+        },
+        lowercase: {
+          inline: 'span',
+          styles: { textTransform: 'lowercase' },
+          exact: true
+        },
+        capitalize: {
+          inline: 'span',
+          styles: { textTransform: 'capitalize' },
+          exact: true
+        },
+        capitalizefirstword: {
+          inline: 'span',
+          styles: { display: 'inline-block' },
+          classes: 'mce-capitalize-first',
+          exact: true
+        },
         link: {
           inline: 'a',
           selector: 'a',
@@ -20379,7 +20501,7 @@
           clear_child_styles: true,
           remove_similar: true,
           attributes: {
-            'lang': '%value',
+            lang: '%value',
             'data-mce-lang': vars => {
               var _a;
               return (_a = vars === null || vars === void 0 ? void 0 : vars.customValue) !== null && _a !== void 0 ? _a : null;
@@ -20710,12 +20832,14 @@
         let value = getComputedStyle(name, previewElm);
         if (name === 'background-color' && /transparent|rgba\s*\([^)]+,\s*0\)/.test(value)) {
           value = getComputedStyle(name);
-          if (rgbaToHexString(value).toLowerCase() === '#ffffff') {
+          const hex = rgbaToHexString(value);
+          if (hex && hex.toLowerCase() === '#ffffff') {
             return;
           }
         }
         if (name === 'color') {
-          if (rgbaToHexString(value).toLowerCase() === '#000000') {
+          const hex = rgbaToHexString(value);
+          if (hex && hex.toLowerCase() === '#000000') {
             return;
           }
         }
@@ -20810,9 +20934,18 @@
     };
     const registerEvents = (editor, undoManager, locks) => {
       const isFirstTypedCharacter = Cell(false);
+      const typingDirection = Cell(Optional.none());
       const addNonTypingUndoLevel = e => {
+        typingDirection.set(Optional.none());
         setTyping(undoManager, false, locks);
         undoManager.add({}, e);
+      };
+      const startTypingSession = (direction, e) => {
+        undoManager.beforeChange();
+        setTyping(undoManager, true, locks);
+        undoManager.add({}, e);
+        typingDirection.set(Optional.some(direction));
+        isFirstTypedCharacter.set(true);
       };
       editor.on('init', () => {
         undoManager.add();
@@ -20866,15 +20999,41 @@
           if (undoManager.typing) {
             addNonTypingUndoLevel(e);
           }
+          typingDirection.set(Optional.none());
           return;
         }
+        const isDelete = keyCode === 8 || keyCode === 46;
         const modKey = e.ctrlKey && !e.altKey || e.metaKey;
-        if ((keyCode < 16 || keyCode > 20) && keyCode !== 224 && keyCode !== 91 && !undoManager.typing && !modKey) {
-          undoManager.beforeChange();
-          setTyping(undoManager, true, locks);
-          undoManager.add({}, e);
-          isFirstTypedCharacter.set(true);
+        if (isDelete && !modKey) {
+          if (undoManager.typing) {
+            typingDirection.get().fold(() => {
+              addNonTypingUndoLevel(e);
+              startTypingSession('backward', e);
+            }, dir => {
+              if (dir !== 'backward') {
+                addNonTypingUndoLevel(e);
+                startTypingSession('backward', e);
+              }
+            });
+          } else {
+            startTypingSession('backward', e);
+          }
           return;
+        }
+        if ((keyCode < 16 || keyCode > 20) && keyCode !== 224 && keyCode !== 91 && !undoManager.typing && !modKey) {
+          startTypingSession('forward', e);
+          return;
+        }
+        if (undoManager.typing && !isDelete) {
+          typingDirection.get().each(dir => {
+            if (dir === 'backward') {
+              addNonTypingUndoLevel(e);
+              startTypingSession('forward', e);
+            }
+          });
+          if (typingDirection.get().isNone()) {
+            typingDirection.set(Optional.some('forward'));
+          }
         }
         const hasOnlyMetaOrCtrlModifier = Env.os.isMacOS() ? e.metaKey : e.ctrlKey && !e.altKey;
         if (hasOnlyMetaOrCtrlModifier) {
@@ -20885,6 +21044,7 @@
         if (undoManager.typing) {
           addNonTypingUndoLevel(e);
         }
+        typingDirection.set(Optional.none());
       });
       const isInsertReplacementText = event => event.inputType === 'insertReplacementText';
       const isInsertTextDataNull = event => event.inputType === 'insertText' && event.data === null;
@@ -21011,8 +21171,14 @@
           return true;
         } else if (dom.getStyle(rootElm.firstElementChild, 'padding-left') || dom.getStyle(rootElm.firstElementChild, 'padding-right')) {
           return false;
+        } else if (forcedRootBlock === firstElement.nodeName.toLowerCase()) {
+          let child = firstElement.firstElementChild;
+          while (child && child.hasAttribute('data-mce-bogus')) {
+            child = child.nextElementSibling;
+          }
+          return child === null || child.nodeName === 'BR';
         } else {
-          return forcedRootBlock === firstElement.nodeName.toLowerCase();
+          return false;
         }
       } else {
         return false;
@@ -21040,7 +21206,7 @@
       if (isNotEmpty(placeholder)) {
         editor.on('init', e => {
           updatePlaceholder(e, true);
-          editor.on('change SetContent ExecCommand', updatePlaceholder);
+          editor.on('change SetContent ExecCommand input', updatePlaceholder);
           editor.on('paste', e => Delay.setEditorTimeout(editor, () => updatePlaceholder(e)));
         });
       }
@@ -25746,11 +25912,11 @@
       const body = editor.getBody();
       lastRngCell.set(selection.getRng());
       const pasteBinElm = dom.add(editor.getBody(), 'div', {
-        'id': 'mcepastebin',
-        'class': 'mce-pastebin',
-        'contentEditable': true,
+        id: 'mcepastebin',
+        class: 'mce-pastebin',
+        contentEditable: true,
         'data-mce-bogus': 'all',
-        'style': 'position: fixed; top: 50%; width: 10px; height: 10px; overflow: hidden; opacity: 0'
+        style: 'position: fixed; top: 50%; width: 10px; height: 10px; overflow: hidden; opacity: 0'
       }, pasteBinDefaultContent);
       if (Env.browser.isFirefox()) {
         dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) === 'rtl' ? 65535 : -65535);
@@ -26029,7 +26195,7 @@
           const contentType = dataTransfer.types[i];
           try {
             items[contentType] = dataTransfer.getData(contentType);
-          } catch (ex) {
+          } catch (_ex) {
             items[contentType] = '';
           }
         }
@@ -26118,6 +26284,9 @@
           content = clipboardContent['text/plain'];
         } else {
           content = innerText(content);
+        }
+        if (!plainTextMode) {
+          content = Entities.encodeRaw(content);
         }
       }
       if (isDefaultPasteBinContent(content)) {
@@ -26222,7 +26391,7 @@
           clipboardData.setData('text/plain', text);
           clipboardData.setData(internalHtmlMime(), html);
           return true;
-        } catch (e) {
+        } catch (_e) {
           return false;
         }
       } else {
@@ -26240,7 +26409,7 @@
     const fallback = editor => (html, done) => {
       const {dom, selection} = editor;
       const outer = dom.create('div', {
-        'contenteditable': 'false',
+        contenteditable: 'false',
         'data-mce-bogus': 'all'
       });
       const inner = dom.create('div', { contenteditable: 'true' }, html);
@@ -26828,10 +26997,10 @@
       });
       dom.setAttrib(clonedElm, 'data-mce-selected', null);
       const ghostElm = dom.create('div', {
-        'class': 'mce-drag-container',
+        class: 'mce-drag-container',
         'data-mce-bogus': 'all',
-        'unselectable': 'on',
-        'contenteditable': 'false'
+        unselectable: 'on',
+        contenteditable: 'false'
       });
       dom.setStyles(ghostElm, {
         position: 'absolute',
@@ -28005,7 +28174,7 @@
       const setEditorCommandState = (cmd, state) => {
         try {
           editor.getDoc().execCommand(cmd, false, String(state));
-        } catch (ex) {
+        } catch (_ex) {
         }
       };
       const isDefaultPrevented = e => {
@@ -28451,6 +28620,7 @@
           pad_empty_with_br: getOption('pad_empty_with_br'),
           url_converter: getOption('url_converter'),
           url_converter_scope: getOption('url_converter_scope'),
+          protect: getProtect(editor),
           element_format: getOption('element_format'),
           entities: getOption('entities'),
           entity_encoding: getOption('entity_encoding'),
@@ -28462,6 +28632,12 @@
     };
     const createParser = editor => {
       const parser = DomParser(mkParserSettings(editor), editor.schema);
+      parser.addAttributeFilter('data-mce-src,data-mce-href,data-mce-style', (nodes, name) => {
+        let i = nodes.length;
+        while (i--) {
+          nodes[i].attr(name, null);
+        }
+      });
       parser.addAttributeFilter('src,href,style,tabindex', (nodes, name) => {
         const dom = editor.dom;
         const internalName = 'data-mce-' + name;
@@ -28469,7 +28645,7 @@
         while (i--) {
           const node = nodes[i];
           let value = node.attr(name);
-          if (value && !node.attr(internalName)) {
+          if (value) {
             if (value.indexOf('data:') === 0 || value.indexOf('blob:') === 0) {
               continue;
             }
@@ -28811,7 +28987,7 @@
         editor.contentDocument = iframe.contentDocument;
         contentBodyLoaded(editor);
       };
-      if (shouldUseDocumentWrite(editor) || Env.browser.isFirefox()) {
+      if (shouldUseDocumentWrite(editor) || Env.browser.isFirefox() || Env.browser.isSafari() && Env.os.isLinux()) {
         const doc = editor.getDoc();
         doc.open();
         doc.write(editor.iframeHTML);
@@ -29310,7 +29486,7 @@
           let failed;
           try {
             doc.execCommand(command);
-          } catch (ex) {
+          } catch (_ex) {
             failed = true;
           }
           if (command === 'paste' && !doc.queryCommandEnabled(command)) {
@@ -29522,35 +29698,35 @@
         'ForeColor,HiliteColor': (command, _ui, value) => {
           toggleFormat(command, { value });
         },
-        'BackColor': (_command, _ui, value) => {
+        BackColor: (_command, _ui, value) => {
           toggleFormat('hilitecolor', { value });
         },
-        'FontName': (_command, _ui, value) => {
+        FontName: (_command, _ui, value) => {
           fontNameAction(editor, value);
         },
-        'FontSize': (_command, _ui, value) => {
+        FontSize: (_command, _ui, value) => {
           fontSizeAction(editor, value);
         },
-        'LineHeight': (_command, _ui, value) => {
+        LineHeight: (_command, _ui, value) => {
           lineHeightAction(editor, value);
         },
-        'Lang': (command, _ui, lang) => {
+        Lang: (command, _ui, lang) => {
           var _a;
           toggleFormat(command, {
             value: lang.code,
             customValue: (_a = lang.customCode) !== null && _a !== void 0 ? _a : null
           });
         },
-        'RemoveFormat': command => {
+        RemoveFormat: command => {
           editor.formatter.remove(command);
         },
-        'mceBlockQuote': () => {
+        mceBlockQuote: () => {
           toggleFormat('blockquote');
         },
-        'FormatBlock': (_command, _ui, value) => {
+        FormatBlock: (_command, _ui, value) => {
           toggleFormat(isString(value) ? value : 'p');
         },
-        'mceToggleFormat': (_command, _ui, value) => {
+        mceToggleFormat: (_command, _ui, value) => {
           toggleFormat(value);
         }
       });
@@ -29559,7 +29735,7 @@
       const isFormatMatch = name => editor.formatter.match(name);
       editor.editorCommands.addCommands({
         'Bold,Italic,Underline,Strikethrough,Superscript,Subscript': command => isFormatMatch(command),
-        'mceBlockQuote': () => isFormatMatch('blockquote')
+        mceBlockQuote: () => isFormatMatch('blockquote')
       }, 'state');
       editor.editorCommands.addQueryValueHandler('FontName', () => fontNameQuery(editor));
       editor.editorCommands.addQueryValueHandler('FontSize', () => fontSizeQuery(editor));
@@ -29604,7 +29780,7 @@
         const linkDetails = isString(value) ? { href: value } : value;
         const anchor = editor.dom.getParent(editor.selection.getNode(), 'a');
         if (isObject(linkDetails) && isString(linkDetails.href)) {
-          linkDetails.href = linkDetails.href.replace(/ /g, '%20');
+          linkDetails.href = linkDetails.href.replace(/&amp;/g, '&').replace(/ /g, '%20');
           if (!anchor || !linkDetails.href) {
             editor.formatter.remove('link');
           }
@@ -29853,7 +30029,7 @@
     const setEditorCommandState = (editor, cmd, state) => {
       try {
         editor.getDoc().execCommand(cmd, false, String(state));
-      } catch (ex) {
+      } catch (_ex) {
       }
     };
     const setContentEditable = (elm, state) => {
@@ -31136,8 +31312,8 @@
       documentBaseURL: null,
       suffix: null,
       majorVersion: '1',
-      minorVersion: '0.10',
-      releaseDate: '2026-02-16',
+      minorVersion: '0.11',
+      releaseDate: '2026-06-11',
       i18n: I18n,
       activeEditor: null,
       focusedEditor: null,
@@ -31659,7 +31835,7 @@
       localStorage = window.localStorage;
       localStorage.setItem(test, test);
       localStorage.removeItem(test);
-    } catch (e) {
+    } catch (_e) {
       localStorage = create();
     }
     var LocalStorage = localStorage;
